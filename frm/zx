@@ -1,0 +1,6 @@
+e.oSource.oParent.getRowBindingContext()
+e.oSource.getRowBindingContext()
+
+e.getSource().getParent().getRowBindingContext()
+
+e.getSource().getParent().getRowBindingContext().getPath()

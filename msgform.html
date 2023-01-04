@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Message</h2>
+
+<form action="/api/sendmsg" onsubmit="myFunction()" method="post">
+  <label for="owner">Topic</label><br>
+  <input type="text" id="owner" name="owner" value="vlad115"><br>
+  <label for="topic">Topic</label><br>
+  <input type="text" id="topic" name="topic" value="Topic1"><br>
+  <label for="msg">Message</label><br>
+  <textarea id="msg" name="msg" rows="4" cols="50">The Message Sample</textarea>
+  <input type="submit" value="Send It">
+</form>
+
+<script>
+function myFunction() {
+//  alert("The form was submitted");
+}
+</script>
+
+
+</body>
+</html>

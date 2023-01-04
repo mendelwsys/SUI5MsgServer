@@ -1,0 +1,1826 @@
+﻿<!DOCTYPE HTML>      
+
+
+<html>
+<head>
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/><!--$$$CHARSET_REPLACMENT-->
+
+
+<style type="text/css">
+    .minWidth
+    {
+        min-width: 40rem;
+    }
+
+</style>
+<script>
+//!!!!!!! Не используй одинарных ковычек, везде используй только двойные !!!!!!
+var initAntiKB5006671W8 = function()
+{
+		if (typeof(console) === "undefined")
+		{
+		//	alert("NO Console")	
+		}
+		try
+		{
+		  for ( var x in window.Intl)
+		  {
+			if ("x"!=null) break;
+    		  }
+		}
+		catch(e)
+		{ 
+			window.Intl = false;
+//			alert("Anti KB was init");
+		}
+}
+initAntiKB5006671W8();
+
+var createCSSSelector = function  (selector, style) 
+{
+  if (!document.styleSheets) return;
+  if (document.getElementsByTagName("head").length == 0) return;
+  var styleSheet,mediaType;
+
+  if (document.styleSheets.length > 0) {
+    for (var i = 0, l = document.styleSheets.length; i < l; i++) {
+      if (document.styleSheets[i].disabled) 
+        continue;
+      var media = document.styleSheets[i].media;
+      mediaType = typeof media;
+
+      if (mediaType === "string") {
+        if (media === "" || (media.indexOf("screen") !== -1)) {
+          styleSheet = document.styleSheets[i];
+        }
+      }
+      else if (mediaType=="object") {
+        if (media.mediaText === "" || (media.mediaText.indexOf("screen") !== -1)) {
+          styleSheet = document.styleSheets[i];
+        }
+      }
+
+      if (typeof styleSheet !== "undefined") 
+        break;
+    }
+  }
+
+  if (typeof styleSheet === "undefined") {
+    var styleSheetElement = document.createElement("style");
+    styleSheetElement.type = "text/css";
+    document.getElementsByTagName("head")[0].appendChild(styleSheetElement);
+
+    for (i = 0; i < document.styleSheets.length; i++) {
+      if (document.styleSheets[i].disabled) {
+        continue;
+      }
+      styleSheet = document.styleSheets[i];
+    }
+
+    mediaType = typeof styleSheet.media;
+  }
+
+  if (mediaType === "string") {
+    for (var i = 0, l = styleSheet.rules.length; i < l; i++) {
+      if(styleSheet.rules[i].selectorText && 
+		styleSheet.rules[i].selectorText.toLowerCase()==selector.toLowerCase()) {
+        styleSheet.rules[i].style.cssText = style;
+        return;
+      }
+    }
+    styleSheet.addRule(selector,style);
+  }
+  else if (mediaType === "object") {
+    var styleSheetLength = (styleSheet.cssRules) ? styleSheet.cssRules.length : 0;
+    for (var i = 0; i < styleSheetLength; i++) {
+      if (styleSheet.cssRules[i].selectorText && 
+		styleSheet.cssRules[i].selectorText.toLowerCase() == selector.toLowerCase()) {
+        styleSheet.cssRules[i].style.cssText = style;
+        return;
+      }
+    }
+    styleSheet.insertRule(selector + "{" + style + "}", styleSheetLength);
+  }
+}
+
+
+var fSCaller = function ()
+{
+     var fName = arguments[0];
+     var arg = [];
+     for (var i=1;i<arguments.length;i++)
+     {
+	  arg[arg.length]=arguments[i];
+     }
+
+     return function()
+     {
+	
+	for (var i=0;i<arguments.length;i++)
+	{
+		  arg[arg.length]=arguments[i];
+	}
+
+	
+	 if (window[fName])
+		window[fName].apply(window,arg);
+//	 else if (typeof fName === "function")
+//  		fName.apply(window,arg);
+		  
+     }
+}
+
+var RMF = function( s4Remove )
+{
+	if (s4Remove && s4Remove.length>0 )
+		return s4Remove.substr(1);
+	return  s4Remove;
+}
+
+var DEC = function( s4Decode)
+{
+	if (s4Decode && s4Decode.length>0 )
+		return decodeURIComponent(s4Decode);
+	return s4Decode;
+}
+
+
+
+//Объект контекста
+var Ctx = function(oContainer,contentName)
+{
+    
+    if (!contentName)
+	 contentName="content";
+   
+    if (!oContainer)
+    {
+	oContainer={};
+        oContainer[contentName] =[];
+    }
+
+    this.oContainer = oContainer;
+
+    this.add =  function(oElement)
+    {
+    	if (oElement)
+            this.oContainer[contentName][this.oContainer[contentName].length]=oElement;
+	return this.oContainer[contentName];
+    }
+    this.cnt = function(ix) 
+    {
+	return this.oContainer[contentName][ix];
+    }
+    this.obj = function() 
+    {
+	return this.oContainer;
+    }
+    
+    this.pCtx = function()
+    {
+	return this.ptCtx;
+    }
+
+    this.rCtx = function()
+    {
+	var rv_Ctx = this;
+	while (rv_Ctx.pCtx())
+	  rv_Ctx = rv_Ctx.pCtx();
+	return rv_Ctx;
+    }
+
+    this.fs = function(_fsDsc)
+    {
+	if (!this.fsDsc)
+		this.fsDsc=_fsDsc;
+	else
+	{      if (_fsDsc)
+		for (var f in _fsDsc) 
+			this.fsDsc[f] = _fsDsc[f]	
+	}
+	return this.fsDsc;
+		
+    }	
+
+    this.ctx = function(aCtx)
+    {
+	if (!this.aCtx)
+		this.aCtx = [];
+	aCtx.ptCtx=this;
+	this.aCtx[this.aCtx.length] = aCtx;
+	
+	this.add(aCtx.obj());
+	return aCtx;
+    }
+}
+
+var tsCtx = function(title,cntCols,gCtx)
+{
+	if (!gCtx)
+	{
+
+	  oTabProp={};
+	  oTabProp['select']=fCaller("onTabChange");
+
+	  var gCtx = new Ctx(jTabStrip("ACTIVE_TAB",oTabProp),"tabs");
+	}
+	if (!title)
+		var lv_title = "";
+	else
+		lv_title = title;
+
+  	var oTabCtx2 = gCtx.ctx(new Ctx(jTab(jTitle(lv_title))));
+	var ctx=oTabCtx2.ctx(new Ctx(jForm(cntCols)));
+//if (title) ctx.add(jTitle(title));
+	return ctx;   
+}
+
+var fmCtx = function(title,cntCols,gCtx)
+{
+	if (!gCtx)
+	{
+	  var gCtx = new Ctx(jForm(cntCols));
+	}
+//if (title) gCtx.add(jTitle(title));
+	return gCtx;   
+}
+var PAGE_LOADED = false;
+var oJsonConv;
+var addConverter = function(converter,dataPath2Sap)
+{
+	if (!oJsonConv)
+		oJsonConv = new jsonConv(dataPath2Sap) 
+	oJsonConv.add(converter);   
+}
+
+//Конструктор объекта конвертера , необходим что бы 
+//преобразовывать из/в форматы данных SAP и UI5
+var jsonConv = function(dataPath2Sap)
+{
+	this.allConv = [];
+	if (!dataPath2Sap) dataPath2Sap = "";
+	this.dataPath2Sap = dataPath2Sap;
+
+
+	this.removePrefix =  function (_dataPath2Sap)
+	{
+		var ix=_dataPath2Sap.indexOf(this.dataPath2Sap);
+		if (ix>=0)
+		{
+			ix+=this.dataPath2Sap.length;
+			return _dataPath2Sap.substring(ix);
+		}
+		return _dataPath2Sap;
+	
+	}
+	this.cpData =  function (_aData)
+	{
+		var _jsonData = JSON.stringify(_aData);
+		return JSON.parse(_jsonData);
+
+	}
+	this.add =  function(conv)
+	{
+		conv.dataPath2Sap=this.removePrefix(conv.dataPath2Sap);
+		this.allConv[this.allConv.length] = conv;
+	}
+
+	this.js2Sap = function(_aData)
+	{
+	    _aData=this.cpData(getDataByPath(_aData,this.dataPath2Sap));
+	    for (var i=0;i<this.allConv.length;i++)
+	    {
+		_aData=this.allConv[i].js2Sap(_aData);
+	    }
+	    return _aData;
+	}
+	this.sap2Js = function(_aData)
+	{
+	    for (var i=0;i<this.allConv.length;i++)
+	    {
+		_aData=this.allConv[i].sap2Js(_aData);
+	    }
+	    return _aData;
+	}                                  
+}
+
+
+var sPrefixBind = "/modelData/PL";
+var sPrefixBindHDBK = "/modelData/HDBK";
+var sPrefixBindCTRL = "/modelData/CTRL";
+var fBinder = function(bindName)
+{
+     if (!bindName)
+	return 	sPrefixBind;
+     return sPrefixBind+"/"+bindName;
+}
+
+var fBinderCTRL = function(bindName,suffix)
+{
+     if (!bindName)
+	return 	sPrefixBindCTRL;
+	if (suffix == null)
+     		return sPrefixBindCTRL+"/"+bindName;
+	else
+     		return sPrefixBindCTRL+"/"+bindName+suffix;
+
+}
+
+
+var fBinderHDBK = function(bindName)
+{
+     if (!bindName)
+	return 	sPrefixBindHDBK;
+     return sPrefixBindHDBK+"/"+bindName;
+}
+
+
+
+
+var getDataByPath =  function (_aData,_dataPath)
+{
+	var arrPath = _dataPath.split("/");
+	for (var i=0;i<arrPath.length;i++)
+	{
+	  if (_aData && arrPath[i].length>0)
+	   _aData = _aData[arrPath[i]];
+	}
+	return _aData;
+}
+
+var setDataByPath =  function (_aData,_dataPath,_aDataVal)
+{
+	var arrPath = _dataPath.split("/");
+	for (var i=0;i<arrPath.length;i++)
+	{
+	  if (i == arrPath.length-1)
+		_aData[arrPath[i]] = _aDataVal;
+	  else if (arrPath[i].length>0)
+	  {
+	    if (!_aData[arrPath[i]])
+		 _aData[arrPath[i]]={};
+	    _aData = _aData[arrPath[i]];
+          }
+	}
+}
+
+
+//Добавить свойства в объект описаний
+var aProp = function(jsonDesc,descName,descValue)
+{
+	if (descName && descValue)
+		jsonDesc[descName] = descValue;
+	return jsonDesc;
+
+}
+//Добавить в JSON свойства объекта
+var aProps =  function(jsonDesc,oProps)
+{
+	if (oProps)
+         for (var prop in oProps) 
+	  jsonDesc[prop] = oProps[prop]	
+
+	return jsonDesc;
+}
+//Стилизировать JSON
+var sStyle = function(jsonDesc,styleClass)
+{
+	if (styleClass && styleClass.length>0)
+		jsonDesc["styleClass"] = styleClass;
+	return jsonDesc;
+}
+
+//Построить JSON для формы
+var jForm = function( cntCols,oProps)
+{
+	if (cntCols==null)
+		cntCols = 1;
+
+	var oFormJson = {	
+		"Type":sap.ui.layout.form.SimpleForm,
+		"maxContainerCols":cntCols,"labelMinWidth":50,
+		"columnsL":3,"columnsM":2,
+		"layout":sap.ui.layout.form.SimpleFormLayout.ResponsiveGridLayout,
+		"content":[]
+		};
+
+	return  aProps(oFormJson,oProps);
+}
+
+//Построить JSON для полосы закладок
+var jTabStrip =  function(_bindName,oProps)
+{
+	
+	return aProps({"Type":sap.ui.commons.TabStrip,"tabs":[],
+		"selectedIndex":((_bindName)?("{"+fBinder(_bindName)+"}"):0)},oProps);
+}
+//Построить JSON для закладки
+var jTab =  function( title,oProps)
+{
+        return aProps({"Type":sap.ui.commons.Tab,"content":[],"title":title},oProps);
+}
+
+//Простые эелементы
+//Построить JSON для кнопки
+var jButton= function(title,fName,oProps)
+{
+
+        var enabled = oProps;
+	var lv_enabled =null;
+	if (enabled && (""+enabled) === enabled)
+	{
+    	  enabled = fBinderCTRL(enabled);
+	  lv_enabled = "{"+enabled+"}";
+	  oProps = null;
+	}
+	else if (enabled == true || enabled ==false)
+	{
+	  lv_enabled = enabled;
+	  oProps = null;
+	}
+
+	return aProps({"Type":sap.ui.commons.Button,"text":title,
+	"enabled":((lv_enabled!=null)?lv_enabled:true),
+	"press":fName},oProps);
+}
+//Построить JSON для поля заголовка
+var jTitle= function(title,oProps)
+{
+	return aProps({"Type":sap.ui.core.Title,"text":title},oProps);
+}
+
+
+//Построить JSON для поля навароченного тултипа )
+var jRichTooltip= function(_bindName,oProps)
+{
+    var bindName = fBinderCTRL(_bindName);
+    return aProps({"Type":sap.ui.commons.RichTooltip,"text": "{"+bindName+"}"},oProps);
+}
+
+var jRichTooltip2= function(sHTML,oProps)
+{
+    return aProps({"Type":sap.ui.commons.RichTooltip,"text": sHTML},oProps);
+}
+
+
+//Построить JSON для поля ввода
+var jText= function(_bindName,oProps)
+{
+	var bindName = fBinder(_bindName);
+
+	var type = sap.ui.commons.TextField;
+	if (oProps && oProps["rightPress"])
+		type = "TextFieldExt";
+
+	return aProps({"Type":type,"width": "100%",
+
+
+	"editable":((_bindName)?("{"+fBinderCTRL(_bindName,"_E")+"}"):true),
+	"visible":((_bindName)?("{"+fBinderCTRL(_bindName,"_V")+"}"):true),
+	"value":((_bindName)?("{"+bindName+"}"):"")},oProps);
+}
+
+//Построить JSON для поля ввода
+var jValueHelpField= function(_bindName,oProps)
+{
+	var bindName = fBinder(_bindName);
+
+	var type = sap.ui.commons.ValueHelpField;
+	if (oProps && oProps["rightPress"])
+		type = "ValueHelpFieldExt";
+
+	return aProps({"Type":type,"width": "100%",
+
+	"editable":((_bindName)?("{"+fBinderCTRL(_bindName,"_E")+"}"):true),
+	"visible":((_bindName)?("{"+fBinderCTRL(_bindName,"_V")+"}"):true),
+	"value":((_bindName)?("{"+bindName+"}"):"")},oProps);
+}
+
+//Построить JSON для TextArea
+var jTextArea= function(_bindName,oProps)
+{
+	var bindName = fBinder(_bindName);
+
+	var type = sap.ui.commons.TextArea;
+	if (oProps && oProps["rightPress"])
+		type = "TextAreaExt";
+
+
+	return aProps({"Type":type,"width": "100%",
+
+	"editable":((_bindName)?("{"+fBinderCTRL(_bindName,"_E")+"}"):true),
+	"visible":((_bindName)?("{"+fBinderCTRL(_bindName,"_V")+"}"):true),
+	"value":((_bindName)?("{"+bindName+"}"):"")},oProps);
+}
+
+
+//Построить JSON для label 
+var jLabel= function(text,oProps)
+{
+	var type = sap.ui.commons.Label;
+	if (oProps && oProps["rightPress"])
+		type = "LabelExt";
+
+	return aProps({"Type":sap.ui.commons.Label,"width": "100%",
+	"text":text},oProps);
+}
+
+
+//Построить JSON для DropdownBox 
+var jDropdownBox= function(_bindName,itemsBind,oProps)
+{
+	bindName = fBinder(_bindName);
+	itemsBind=fBinderHDBK(itemsBind);
+        if (Array.isArray(itemsBind))
+	var jsbind=itemsBind;
+	else
+	var jsbind={
+		"path":itemsBind,
+		"template":new sap.ui.core.ListItem().bindProperty("key","key").
+				bindProperty("additionalText","additionalText").bindProperty("text","text")
+	}
+
+	var type = sap.ui.commons.DropdownBox;
+	if (oProps && oProps["rightPress"])
+		type = "DropdownBoxExt";
+
+
+	return aProps({"Type":type,"items":jsbind,
+
+	"editable":((_bindName)?("{"+fBinderCTRL(_bindName,"_E")+"}"):true),
+	"visible":((_bindName)?("{"+fBinderCTRL(_bindName,"_V")+"}"):true),
+	"selectedKey":((_bindName)?("{"+bindName+"}"):selectedKey)},oProps);
+}
+
+//Построить JSON для ListItem для DropdownBox
+var jListItem = function(key,text,additionalText,oProps)
+{
+   return aProps({"Type":sap.ui.core.ListItem,"key":key,
+	"additionalText":additionalText,"text":text},oProps);
+} 
+
+var oTable;
+
+//Построить JSON для Таблицы
+var  jTable0 = function(jsonColumns,oProps,_bindRowsName)
+{
+
+    var bindRowsName = fBinder(_bindRowsName);
+    var bindSelectedIndex = fBinder("selIndex");
+    	
+//    alert(bindRowsName)	
+
+    var type = sap.ui.table.Table;
+    var loProp  = 
+    {
+		"Type":type,
+		"columns": jsonColumns,
+//		"selectionMode": sap.ui.table.SelectionMode.Single,
+//		"enableSelectAll": false,
+                 rowSelectionChange:function(oEvent){ 
+
+			var params=oEvent.getParameters();
+			var ri = oEvent.getParameters().rowIndices;
+
+			var oModelData = oModel.getData();
+			
+			if (
+				params.selectAll
+				||
+				(!params.selectAll && !params.rowContext)
+			   )
+			{
+				var oModelRowsData = getDataByPath(oModelData,fBinder());
+				var rr=oModelRowsData.rows;		  
+				for (var i=0;i<rr.length;i++)
+					rr[i].selected=(true === params.selectAll);	
+			}
+			else if (params.rowContext)
+			{
+			   var path = params.rowContext.sPath;
+			   var oModelRowData = getDataByPath(oModelData,path);
+			   if (oModelRowData)
+			   {
+			   	if (!oModelRowData.selected)
+					   {oModelRowData.selected=true;}
+				   else
+					   {oModelRowData.selected=false;}
+			   }
+			}
+
+			//oTable=sap.ui.getCore().byId(params.id);
+			//for (var  ix in ri)
+			//{
+				//oTable.setSelectedIndex(ri[ix]);
+				//oTable.setSelectionInterval(0,1);
+			//}
+			//oModel.refresh(true);
+			//oTable.rerender();
+			//alert(oEvent.getParameters().rowIndices);
+		 },
+		"selectedIndex":"{"+bindSelectedIndex+"}",
+		"rows":"{"+bindRowsName+"}"
+    };
+
+    var oObj=aProps(loProp,oProps);
+    return oObj;
+}
+
+
+var Prop = function(_pName,_pValue)
+{
+	
+	this.add= function (pName,pValue)
+	{
+		this[pName]=pValue;
+		return this;
+	}
+	return this.add(_pName,_pValue);
+
+}
+
+var isProp =  function(prop)
+{
+      return prop!=null &&  (prop.constructor) && 
+		(prop.constructor.name.indexOf("Prop") >=0);
+}
+
+var isArray = function (myArray) {
+  return myArray!=null && myArray.constructor.toString().indexOf("Array") > -1;
+}
+
+var PropA =  function(_pName,_pValue)
+{
+
+	if (_pName!=null && isArray(_pName))
+	{
+		this._props = _pName;
+		return this;
+	}
+	this._props =  [];
+	
+	this._addA=function(_pArray)
+	{
+		for (var ix in _pArray)
+			this._props[this._props.length] = _pArray[ix];
+		return this;
+	}
+
+	this._add = function (oProp)
+	{
+		if (oProp) this._props[this._props.length]=oProp;
+		return this;
+	}
+
+	this.add = function (pName,pValue,rv)
+	{
+		if (pName!=null && isArray(pName))
+			this._addA(pName);
+		else if (pName!=null && typeof pName === "string")
+	         	this._add(new Prop(pName,pValue))
+	        else if (isProp(pName))
+		{
+	         	this._add(pName)
+			if (pValue!=null)
+			 	rv=pValue;
+                }
+		if (isArray(rv))
+		 return this._props;
+		return this;
+	}
+
+	this.props =  function(oProp) 
+	{ 
+		this.add(oProp);
+		return this._props;
+	};
+
+	return this.add(_pName,_pValue);
+}
+
+//Первый параметр массив [{"FIELD1":"Поле 1","Type":"TextField"},{"FIELD2":"Поле 2"}] тип опционален, если не указан 
+//используется sap.ui.commons.TextField
+//Второй параметр _bindRowsName по умолчанию rows
+//Третий объект плоских свойств таблицы по документации.
+var  jTable = function(jsonDescColumns,oProps,_bindRowsName)
+{
+	var columns=[];
+	for ( var ixDesc in jsonDescColumns)
+	{
+		var oColProps={};
+		var txtLabel=null;
+		var txtTemplate=null;
+		var desCol = jsonDescColumns[ixDesc]
+		for (var fname in desCol)
+		{	
+			var tp=typeof desCol[fname];
+			if (tp === "function")
+				continue;
+			if (fname == "Type")
+			{
+			   var ftype =  desCol[fname];
+			   if (ftype.indexOf(".")<0)
+				ftype="sap.ui.commons."+ftype;
+			   oColProps["TType"]=ftype;
+			}
+			else if (fname == "OTmpl")
+			{
+				txtTemplate=desCol[fname];
+			}
+			else if (fname == "OProp")
+			{
+				var inProps=desCol[fname];
+				for (var fname1 in inProps)
+				  oColProps[fname1]=inProps[fname1];
+			}
+			else
+			{
+				txtLabel=desCol[fname];
+				if (fname && fname.length>0)
+				   txtTemplate=fname;
+			}
+			  
+		}
+		columns[columns.length] = jColumn(txtLabel,txtTemplate,oColProps);
+	}
+	if (_bindRowsName==null)
+		_bindRowsName ="rows";
+		
+	return jTable0(columns,oProps,_bindRowsName);
+}
+
+//Построить JSON для Column Таблицы ( Заголовок для отображения,ид_поля, доп совойства, 
+// задать тип шаблона можно с TType, если не задан тип по умолчанию  sap.ui.commons.TextField)
+var jColumn = function(jsonOrTextLabel,jsonOrTextTemplate,oProps)
+{
+	var lColumnO ={};
+	if (oProps==null) oProps={};
+
+	if (!oProps["Type"])
+		oProps["Type"]=sap.ui.table.Column;
+
+	var oLabel;
+	if (typeof jsonOrTextLabel === "string") //Передали заголовок - размещаем объект по умолчанию
+		oLabel=jLabel(jsonOrTextLabel)		
+	else
+		oLabel=jsonOrTextLabel;
+
+	var oTemplate;
+	if (typeof jsonOrTextTemplate === "string") //Передали имя биндинга -  размещаем объект по умолчанию
+	{
+		
+		oTemplate={"Type":sap.ui.commons.TextField,
+		"value":"{"+jsonOrTextTemplate+"}"};
+		if (oProps["TType"]!=null)
+		{
+			oTemplate["Type"]=oProps["TType"];
+			delete oProps["TType"];
+		}
+		if( jsonOrTextTemplate==null || jsonOrTextTemplate.length==0)
+			delete oTemplate["value"];
+
+	}
+	else
+		oTemplate=jsonOrTextTemplate;
+	return jColumn0(oLabel,oTemplate,oProps);
+}
+
+//Построить JSON для Column Таблицы
+var jColumn0 = function(jsonLabel,jsonTemplate,oProps)
+{
+    var type = sap.ui.table.Column;
+    var lColumnO  = {"Type":type };
+    if (jsonLabel) lColumnO["label"]=jsonLabel;
+    if (jsonTemplate) lColumnO["template"]=jsonTemplate;
+    var oObj=aProps(lColumnO,oProps);
+    return oObj;
+}
+
+//Построить JSON для CheckBox
+var jCheckBox = function(_bindName,oProps)
+{
+    var bindName = fBinder(_bindName);
+
+    var type = sap.ui.commons.CheckBox;
+    if (oProps && oProps["rightPress"])
+	type = "CheckBoxExt";
+
+
+    var oObj=aProps({"Type":type,
+
+    "editable":((_bindName)?("{"+fBinderCTRL(_bindName,"_E")+"}"):true),
+    "visible":((_bindName)?("{"+fBinderCTRL(_bindName,"_V")+"}"):true),
+    "checked":((_bindName)?("{"+bindName+"}"):checked)},oProps);
+    addConverter(new jCheckBoxConv(bindName),fBinder())
+    return oObj;
+}
+
+//Конструктор конвертера для CheckBox
+var jCheckBoxConv = function(bindName)
+{
+	this.dataPath = bindName;
+	this.dataPath2Sap = bindName;
+
+	this.js2Sap = function(_aData)
+	{
+	    	
+	    var lv_data=getDataByPath(_aData,this.dataPath2Sap);
+	    if (lv_data)
+		setDataByPath(_aData,this.dataPath2Sap,"X");
+	    else	
+		setDataByPath(_aData,this.dataPath2Sap,"");
+	    return _aData;
+	}
+	this.sap2Js = function(_aData)
+	{
+	    var lv_data=getDataByPath(_aData,this.dataPath);
+	    if (lv_data && (lv_data=="X" || lv_data===true))
+		setDataByPath(_aData,this.dataPath,true);
+	    else	
+		setDataByPath(_aData,this.dataPath,false);
+	    return _aData;
+	}                                  
+}
+
+//Построить JSON для RadioButtonGroup
+var jRadioButtonGroup = function(_bindName,itemsBind,oProps)
+{
+    var lv_prop = aChanger(-1,_bindName,"select")	
+    var oProps = aProps(lv_prop,oProps);	
+
+    var bindName = fBinder(_bindName);
+    itemsBind=fBinderHDBK(itemsBind);
+    if (Array.isArray(itemsBind))
+	var jsbind=itemsBind;
+    else
+	var jsbind=
+    {
+	"path":itemsBind,
+	"template":new sap.ui.core.Item().bindProperty("key","key").
+				bindProperty("text","text")
+    }
+
+
+    var type = sap.ui.commons.RadioButtonGroup;
+    if (oProps && oProps["rightPress"])
+	type = "RadioButtonGroupExt";
+
+    var oObj=aProps({"Type":type,"items":jsbind,
+
+      "editable":((_bindName)?("{"+fBinderCTRL(_bindName,"_E")+"}"):true),
+      "visible":((_bindName)?("{"+fBinderCTRL(_bindName,"_V")+"}"):true),
+      "selectedIndex":((_bindName)?("{"+bindName+"}"):selectedIndex)},oProps);
+    addConverter(new jRadioButtonGroupConv(bindName,itemsBind),fBinder())
+
+    return oObj;
+
+}
+
+//Конструктор конвертера для RadioButtonGroup
+var jRadioButtonGroupConv = function(bindName,bindItems)
+{
+	this.dataPath = bindName;
+	this.dataPath2Sap = bindName;
+
+	this.js2Sap = function(_aData)
+	{
+	    var items = getDataByPath(oModel.getData(),bindItems);	
+	    var lv_dat=getDataByPath(_aData,this.dataPath2Sap);
+	    if (lv_dat!=null && lv_dat>=0 && items && items.length > lv_dat)
+	    {	
+		// alert("lv_dat:"+lv_dat);
+		setDataByPath(_aData,this.dataPath2Sap,items[lv_dat].key);
+            }
+	    return _aData;
+    	}
+
+	this.sap2Js = function(_aData)
+	{
+	    var lv_data=getDataByPath(_aData,this.dataPath);
+	    if (lv_data!=null)
+	    {
+	        var items=getDataByPath(_aData,bindItems);		
+		// alert("items:start");
+		for (var i=0;i<items.length;i++)
+		{
+		   var s_lv_data = ""+lv_data;
+		   var s_key_data = ""+items[i].key;
+		   if (s_lv_data == s_key_data)
+		   {
+		//	alert("s_lv_data:"+s_lv_data+" "+s_key_data);
+			setDataByPath(_aData,this.dataPath,i);
+			break;
+		   }
+		}
+	    }
+	    return _aData;
+
+	}                                  
+}
+
+//Построить JSON для Item для RadioButtonGroup
+var jItem = function(key,text,oProps)
+{
+   return aProps({"Type":sap.ui.core.Item,"key":key,"text":text},oProps);
+} 
+
+//Построить JSON для DatePicker 
+var jDatePicker= function(_bindName,oProps)
+{
+
+    var bindName = fBinder(_bindName);
+
+    var type = sap.ui.commons.DatePicker;
+    if (oProps && oProps["rightPress"])
+	type = "DatePickerExt";
+
+    var oObj = aProps({"Type":type,
+           value: { type: new sap.ui.model.type.Date({pattern: "dd/MM/yyyy"}) },
+                                       
+	   "editable":((_bindName)?("{"+fBinderCTRL(_bindName,"_E")+"}"):true),
+	   "visible":((_bindName)?("{"+fBinderCTRL(_bindName,"_V")+"}"):true),
+	   "yyyymmdd":((_bindName)?("{"+bindName+"}"):"")},oProps);
+    addConverter(new jDatePickerConv(bindName),fBinder())
+    return oObj;
+}
+
+//Конструктор конвертера для DatePicker
+var jDatePickerConv = function(bindName)
+{
+	this.dataPath = bindName;
+	this.dataPath2Sap = bindName;
+
+	this.js2Sap = function(_aData)
+	{
+	    	
+	    var lv_data=getDataByPath(_aData,this.dataPath2Sap);
+	    if (lv_data==null)
+		setDataByPath(_aData,this.dataPath2Sap,"");
+	    return _aData;
+	}
+
+	this.sap2Js = function(_aData)
+	{
+	    var lv_data=getDataByPath(_aData,this.dataPath);
+	    if (lv_data=="")
+		setDataByPath(_aData,this.dataPath,null);
+	    return _aData;
+	}                                  
+}
+
+
+
+var oModel;
+var fCheckObligatory = function(vCommandCode)
+{
+  return true;
+}
+
+
+
+var fOnSubmit = function(b,oParam)
+{
+  return true;
+}
+
+var reLoadData =  function ( _jsonData)
+{
+
+
+        var aModelData=JSON.parse(_jsonData);
+        <!--alert("After Call"+aModelData.length);-->
+        //Create a model and bind the table rows to this model
+        oModel = new sap.ui.model.json.JSONModel();
+	oModel.setSizeLimit(1500);//Временная подпорка для очень длинных списков
+	var oModelData= {modelData: aModelData}; 
+	if (oJsonConv)
+		oModelData = oJsonConv.sap2Js(oModelData);
+        oModel.setData(oModelData);
+
+	var oView = sap.ui.getCore().byId(window["viewId"]);
+        oView.setModel(oModel);
+	oView.rerender();
+}
+
+var fPrepareJSData = function (vJsonStr)
+{
+    var form = document.getElementById("sapEvent");
+    
+    vJsonStr = (typeof vJsonStr == "undefined" ? "" : vJsonStr);
+    
+    var hidenCopies = document.getElementById("hiddenCopies");
+    hidenCopies.innerHTML = "";
+    fCreatePayLoadToForm(hidenCopies,encodeURIComponent(vJsonStr));
+}
+
+var fCreatePayLoadToForm = function(_form,arrStr)
+{
+    var cutIt=305;
+    <!-- Нарезаем по cutIt символов-->
+    var ix=0;
+    var start=0;
+    var chLn=0;
+
+    var hiddenField = document.createElement("input");
+    hiddenField.setAttribute("type", "hidden");
+    hiddenField.setAttribute("name", "cutIt");
+    hiddenField.setAttribute("value", cutIt);
+    _form.appendChild(hiddenField);
+
+
+    var length=Math.min(arrStr.length,cutIt);
+    while(length>0)
+    {
+        var val=arrStr.substr(start,length);
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", "v"+ix);
+        hiddenField.setAttribute("value", val);
+        _form.appendChild(hiddenField);
+
+        start+=length;
+        length=Math.min(arrStr.length-start,cutIt);
+
+        var s="&v"+ix+"=";
+        chLn=chLn+val.length+s.length;
+        ix++;
+    }
+    var hiddenField = document.createElement("input");
+    hiddenField.setAttribute("type", "hidden");
+    hiddenField.setAttribute("name", "v"+ix);
+    hiddenField.setAttribute("value", "");
+    _form.appendChild(hiddenField);     
+}
+
+
+var aChanger = function (code,field,caller,aProp)
+{
+	if (!aProp)
+		aProp={};
+	if (caller == false)
+		return aProp;
+	if (caller==null)
+		caller ="change";
+	aProp[caller]=fCaller("fCommand",[code,field])
+	return aProp;
+
+}
+
+var aClicker = function(bindName,oProp,evName,fName)
+{
+	if (!oProp)
+		oProp = {};
+	if (fName == null)
+	 var fName = "onRightPress";
+	if (evName == null )
+	 var evName = "rightPress";
+	oProp[evName] = fCaller(fName,[bindName]);
+	return oProp;
+}
+
+var fCaller= function(fName,params)
+{
+
+     var lv_r = fName+"($event";	
+	
+     if (params) 	
+     for (var i=0;i<params.length;i++)
+     {
+	if ((""+params[i]) === params[i])
+		params[i] = "\""+params[i]+"\"";
+	lv_r = lv_r+","+params[i];
+     }	
+
+     var lv_r = lv_r+")";
+     return lv_r;	
+}
+
+
+var fFillPage= function(ctx) //$$$START_REPLACMENT fFillPage
+{
+    if (ctx && ctx.test)
+    {
+	var aTestData= {
+
+		CTRL:
+		{
+		},
+		PL: {
+			oTrans: 
+			{
+			"owner":"Vlad",
+			"topic":"Topic",
+			"msg":"Hello Message"
+			},
+			"rows":[
+/*
+				{"id":"1","owner":"Vlad","topic":"Topic_Vlad","status":"_new","msg":"Message by Vlad"},
+        	               	{"id":"2","owner":"Max","topic":"Topic_Max","status":"_new","msg":"Message by Max","checked":true}
+*/
+			],
+//			selIndex:1
+
+		},
+		HDBK:{
+	        }
+	}
+
+	function reqListener() 
+	{
+		  var __json4Parsing=this.responseText;
+		  var rows=JSON.parse(__json4Parsing);
+		  aTestData.PL.rows=rows;   
+		  reLoadData(JSON.stringify(aTestData));
+		  PAGE_LOADED =  true;
+		  oModel.refresh(true);// need for view selected items in the table!!!
+	}
+	fInitiateCommand(0, "getmsgs",{},reqListener);
+
+    }
+} //$$$END_REPLACMENT fFillPage
+
+var lv_host = "localhost";//$$$ REPLACE_HOST
+var lv_port = "8080";//$$$ REPLACE_PORT
+function fOnCheckSap(){
+if (typeof(sap) === "undefined") {
+	alert("Нет связи с сервером"+lv_host+":"+lv_port);}
+}
+
+function getNAvigator()
+{
+	return navigator.appName + " " +  navigator.appVersion + " " +  navigator.userAgent + " DM:" +  document.documentMode;
+}
+
+
+var cntCtxCall=0;
+function fOnCheckSap2(_vmsg)
+{
+	var rv=0;
+	try
+	{
+
+		var message = " Сервер: "+lv_host+":"+lv_port+"|"+getNAvigator();
+		if (typeof(sap) === "undefined") {
+			if(!_vmsg) alert("sap?"+message);
+			rv=1;	
+			
+		}
+		else if (typeof(sap.ui) === "undefined") {
+			if(!_vmsg) alert("sap.ui?"+message);
+			rv=1;
+		}
+		else if (typeof(sap.ui.commons) === "undefined") {
+			if(!_vmsg) alert("sap.ui.commons?"+message);
+			rv=1;
+		}
+		else if (typeof(sap.ui.commons.TabStrip) === "undefined") {
+			if(!_vmsg) alert("sap.ui.commons.TabStrip?"+message);
+			rv=1;
+		}
+	}
+	catch(e)
+	{
+		if(!_vmsg) alert("Cервер:"+lv_host+":"+lv_port+":" + e.message+"|" +getNAvigator());
+		rv=1;
+	}
+	return rv;
+
+}
+
+
+//$$$START_REPLACMENT getContCtx
+var getContCtx = function(_fsDsc) 
+{
+
+	if (cntCtxCall==0 && fOnCheckSap2("1")!=0)
+	{
+		cntCtxCall++;
+		setTimeout(function(){getContCtx(_fsDsc);},1500);
+
+	}
+	else if (cntCtxCall>=1)
+	{
+		cntCtxCall++;
+		if (fOnCheckSap2()!=0)
+			return;
+	}				
+
+//	var ctx=tsCtx("Messages",1);
+	var ctx = fmCtx("Messages");
+
+	var rCtx = ctx.rCtx();
+	rCtx.test=true;
+	rCtx.fs(_fsDsc);
+
+        rCtx.fs(                                                      
+		{
+			onClick: function (e,vCommandCode, vFieldName) { 
+
+				//var params=e.getParameters();
+				//oTable.setSelectedIndex(1);
+//				var selInterval=oTable.getSelectedIndices();
+//				alert(selInterval);
+//				oTable.addSelectionInterval(0,1);
+//     				var oModelData = oModel.getData().modelData;
+//				alert("click by Controller"+oModelData.PL.selIndex);
+
+				var oModelData = oModel.getData();
+				oModelData = getDataByPath(oModelData,fBinder());
+
+				function reqListener() 
+				{
+				  var __json4Parsing=this.responseText;
+				  var rows=JSON.parse(__json4Parsing);
+				  oModelData.rows=rows;   
+				  oModel.refresh(true);// need for view selected items in the table!!!
+				}
+                // var xs=[7,5,7,8,9]
+                // for (var xi in xs)
+                //     console.log(xi);
+                // for (var xi of xs)
+                //     console.log(xi);
+
+                switch (vFieldName)
+                {
+                    case "getcpy":
+                    {
+                        var sRowPath = e.getSource().getParent().getRowBindingContext().getPath();
+                        var row4Copy = getDataByPath(oModel.getData(), sRowPath);
+                        for (var fldnm in oModelData.oTrans)
+                            oModelData.oTrans[fldnm] = row4Copy[fldnm];
+                        oModel.refresh(true);
+                        break;
+                    }
+                    case  "clear":
+                    {
+                        for (var fldnm in oModelData.oTrans)
+                            oModelData.oTrans[fldnm] = "";
+                        oModel.refresh(true);
+                        break;
+                    }
+                    case "sendmsg":
+                    {
+                        fInitiateCommand(vCommandCode, vFieldName, oModelData.oTrans, reqListener);
+                        break;
+                    }
+                    case "updmsgs":
+                    case "delmsgs":
+                    {
+                        var rr = oModelData.rows;
+                        var rr2send = rr.filter((e) => {
+                            return e.selected;
+                        }).map
+                        ((e) => {
+                            return Object.assign({}, e)
+                        });
+                        fInitiateCommand(vCommandCode, vFieldName, rr2send, reqListener);
+                        break;
+                    }
+                }
+			},
+		});
+
+
+
+//	var lbl1=jLabel("Колонка1");
+//	var lbl2=jLabel("Колонка2");
+
+
+/*
+	var textTempl1={"Type":sap.ui.commons.TextField,
+	"value":"{col1}"};
+	var textTempl2={"Type":sap.ui.commons.TextField,
+	"value":"{col2}"};
+	var columns=[jColumn0(lbl1,textTempl1),jColumn0(lbl2,textTempl2)];
+*/
+/*
+	var textTempl1 = jText("col1",{"value":"{col1}"});
+	var textTempl2 = jText("col2",{"value":"{col2}"});
+	var columns=[jColumn0(lbl1,textTempl1),jColumn0(lbl2,textTempl2)];
+	ctx.add(jTable0(columns,{},"rows"));
+*/
+
+//	ctx.add(jTable([{"col1":"Поле 11","Type":"TextField"},{"col2":"Поле 12"}]));
+
+	var ppId=new Prop("id","id").add("OProp",{"width":"5%"});
+	
+	var ppBtn0=jButton("Copy to form",fCaller("onClick",[7,"getcpy"]));
+    var ppBtn=new Prop("","Get a copy").add("OTmpl",ppBtn0);
+		
+
+
+	var ppMsg=new Prop("msg","Message").add("Type","TextArea").add("OProp",{"width":"60%"});
+	var ppa=new PropA(ppId).add("owner","Owner").add("topic","Topic").add("status","Status").add(ppBtn).add(ppMsg,[]);
+
+//	var ppa=new PropA("col1","Поле 11").add("col2","Поле 12",[]);
+
+
+
+	var lpt={"layoutData":{"Type":sap.ui.layout.GridData,
+		"span":"XL6 L6 M6 S12"}}
+
+
+	ctx.add(jLabel("Owner"));
+	ctx.add(jText("oTrans/owner",lpt));
+
+	ctx.add(jLabel("Topic"));
+	ctx.add(jText("oTrans/topic",lpt));
+	                            
+	ctx.add(jLabel("Message"));
+	ctx.add(jTextArea("oTrans/msg",lpt));
+
+        ctx.add(jLabel());
+	var lpb0={"layoutData":{"Type":sap.ui.layout.GridData,
+		//"linebreak":true,
+		"span":"XL3 L3 M3 S12"}}
+	ctx.add(jButton("Add message",fCaller("onClick",[1,"sendmsg"]),lpb0));
+
+
+	var lpb01={"layoutData":{"Type":sap.ui.layout.GridData,
+			"span":"XL3 L3 M3 S12"}}
+        ctx.add(jButton("Clear form",fCaller("onClick",[3,"clear"]),lpb01));
+
+
+	ctx.add(jLabel());
+/*
+	var lpb1={"layoutData":{"Type":sap.ui.layout.GridData,
+		"linebreak":true,"span":"XL5 L6 M6 S12"}}
+//	ctx.add(jButton("Update Messages",fCaller("onClick",[2,"updmsgs"]),lpb1));
+
+
+	var lpb2={"layoutData":{"Type":sap.ui.layout.GridData,
+				"span":"XL5 L6 M6 S12"}}
+//	ctx.add(jButton("Delete Messages",fCaller("onClick",[3,"delmsgs"]),lpb2));
+*/
+
+
+	var btUpd=jButton("Update Messages",fCaller("onClick",[2,"updmsgs"]),{"width":"30%"});
+	var btDel=jButton("Delete Messages",fCaller("onClick",[3,"delmsgs"]),{"width":"30%"})
+	var lpt={
+		"toolbar":{"Type":sap.ui.commons.Toolbar,
+		"items":
+		[
+			btUpd,btDel
+		]},
+		"layoutData":{"Type":sap.ui.layout.GridData,"linebreak":true,"span":"XL10 L12 M12 S12"}
+		}
+	ctx.add(jTable(ppa,lpt));
+
+
+	return rCtx;
+} 
+//$$$END_REPLACMENT getContCtx
+
+var fInitiateCommand = function(vCommandCode, vFieldName,oParam,reqListener)
+{
+
+	const req = new XMLHttpRequest();
+	req.addEventListener("load", reqListener);
+	req.open("POST", "/api/"+vFieldName);
+        req.setRequestHeader
+	(
+                "Content-Type",
+                "application/json"
+        );
+	
+        var jsonData=JSON.stringify(oParam);
+	req.send(jsonData);
+}
+
+
+
+var gMenu;
+var gMenuObjBinder;
+/*
+oThis
+vBindMenuName
+oElement
+oView
+*/
+
+var fPopUpMenu = function (_mjData)
+{
+
+	var oMenuData = JSON.parse(_mjData);
+	fPopUpMenuO(oMenuData);
+	
+}
+var fPopUpMenuO = function (oMenuData)
+{
+
+	var vBindMenuName = oMenuData.name;
+	
+	if (gMenuObjBinder!=null && vBindMenuName == gMenuObjBinder.vBindMenuName)
+	{
+	      var menuArr = oMenuData.menu;
+	      var oElement = gMenuObjBinder.oElement;	
+              if (menuArr && menuArr.length>0)
+	      {
+		if (gMenu) 
+		   delete gMenu;	
+		{	
+		   var lv_menu = new sap.ui.unified.Menu();
+		   var oThis = gMenuObjBinder.oThis;
+		   for (var im=0;im<menuArr.length;im++)
+		   {       
+			var oD = menuArr[im];
+			var rvv = function(_oD)
+			{
+				return function(e)
+	     			{
+				   var oParam;
+				   if (_oD.selectedFunc)
+				   {
+	 			     oParam = {};
+				     oParam.selectedFunc =_oD.selectedFunc;
+				   }
+				   oThis.fCommand(e,_oD.code,_oD.fieldName,oParam);
+				}
+			}
+			var item = new sap.ui.unified.MenuItem({text:oD.text,
+					icon:oD.icon,select:rvv(oD) })	       	
+			lv_menu.addItem(item);
+		    }
+	            gMenuObjBinder.oView.addDependent(lv_menu);
+		 }
+		 var Popup = sap.ui.core.Popup;	
+		 gMenu = lv_menu;
+		 lv_menu.open(null,oElement, Popup.Dock.BeginTop, 
+					Popup.Dock.BeginBottom, oElement);
+	      }
+	      gMenuObjBinder = null;
+	}
+		
+}
+
+
+var gv_obj_str;
+var fNextPage =  function()
+{
+
+	var lv_obj_str = window["getContCtx"].toString();
+	if (lv_obj_str == gv_obj_str)
+	{fFillPage();return;}
+	gv_obj_str = lv_obj_str;
+        //cancel default menu
+        window.oncontextmenu = function (e){return false;}               
+
+
+     	delete oJsonConv;
+	oJsonConv = null;
+
+	var viewId = window["viewId"];
+	if (viewId)
+	{
+		var oView = sap.ui.getCore().byId(viewId);
+		oView.setModel();
+		cnt=oView.removeAllContent();
+		for (cntj=0;cntj<cnt.length;cntj++)
+		{
+			delete cnt[cntj];
+		}
+		delete oView;
+		delete oModel;
+	}
+
+	var lv_ctx = getContCtx(
+	{
+		     onInit: function () {},
+		     onTabChange: function(e)
+			{
+				//alert(e.getParameters().index);
+				
+			},
+		     ffDigits: function(e)
+		     {
+			var lv_val = e.mParameters.liveValue;
+    			var sign = "";
+			if (lv_val!=null && lv_val.length>0 && lv_val.charAt(0) == "-")
+			{
+			      lv_val = lv_val.substring(1);
+			      sign = "-";
+			}
+			var ixP = lv_val.indexOf(".");
+		    	if (ixP>0)
+			{
+			  var lv_val1 = lv_val.substring(ixP);
+			  lv_val1=lv_val1.replace(/[^\d]/g, "");
+			  lv_val = lv_val.substring(0,ixP);
+			}
+		        lv_val = lv_val.replace(/[^\d]/g, "");
+		        if (ixP>0)
+                          lv_val = lv_val+"."+lv_val1;
+                        lv_val = sign+lv_val;
+			var oSrc= e.getSource();
+			if (oSrc && oSrc.getInputDomRef)
+                          oSrc.getInputDomRef().value = lv_val
+		     },
+		     onRightPress:function(e,vBindMenuName)
+		     {
+
+			try {
+
+		      var oElement = e.getSource();
+
+		      var vBindMenuNameReq = vBindMenuName;
+
+
+   	      	      vBindMenuName = fBinderCTRL(vBindMenuName)
+		      var  menuReq = oModel.getProperty(vBindMenuName);
+		     
+		      vBindMenuNameReq = (menuReq.fieldName!=null)?menuReq.fieldName:vBindMenuNameReq; 
+			
+		      gMenuObjBinder = {};
+		      gMenuObjBinder.oView = this.getView();
+		      gMenuObjBinder.vBindMenuName = vBindMenuNameReq;
+		      gMenuObjBinder.oThis = this;
+		      gMenuObjBinder.oElement = oElement;
+
+/* ------	Отладочный код  начало //
+ 
+		var oMenuArr =
+		[ {code:1,fieldName:"BUTXT",selectedFunc:"sel1",icon:"sap-icon://folder",
+			text:"My 1st Item"},
+		{code:2,fieldName:"BUTXT",selectedFunc:"sel2",icon:"sap-icon://save",
+			text:"My 2nd Item"} ];
+
+		var oSend = {};
+		oSend.name = vBindMenuNameReq;
+		oSend.menu = oMenuArr;
+
+		var _jsonSend = JSON.stringify(oSend);
+
+		fPopUpMenu(_jsonSend);
+
+/* ------	Отладочный код конец. */
+	        this.fCommand(e,menuReq.code,vBindMenuNameReq);
+
+		}
+		catch (e)
+		{
+		  alert("Ошибка onRightPress: " +e.message);
+		}
+/*
+   	      	      vBindMenuName = fBinder(vBindMenuName)
+		      var  menuArr = oModel.getProperty(vBindMenuName);
+ 	              if (menuArr && menuArr.length>0)
+		      {
+			      if (this._menu) 
+				delete this._menu;	
+			      {	
+			        var lv_menu = new sap.ui.unified.Menu();
+				var oThis = this;
+				for (var im=0;im<menuArr.length;im++)
+				{       
+					var oD = menuArr[im];
+					var rvv = function(_oD)
+					{
+						return function(e)
+		     				{
+						   oThis.fCommand(e,_oD.code,_oD.fieldName)
+						}
+					}
+					var item = new sap.ui.unified.MenuItem({text:oD.text,
+							icon:oD.icon,select:rvv(oD) })	       	
+				        lv_menu.addItem(item);
+			        }
+		        	this.getView().addDependent(lv_menu);
+			      }
+			      var Popup = sap.ui.core.Popup;	
+			      this._menu = lv_menu;
+			      lv_menu.open(null,oElement, Popup.Dock.BeginTop, 
+							Popup.Dock.BeginBottom, oElement);
+		      }
+*/
+		     },
+                     fCommand:function(e,vCommandCode, vFieldName,oParam)
+		     {
+		        if (oModel)
+			{
+				var param = e.getParameters();
+				var src = e.getSource();
+				var sName;
+				if (typeof src === "object" && src.getMetadata)
+				{
+					var lv_meta = src.getMetadata();
+					if (lv_meta && lv_meta.getName)
+						sName=lv_meta.getName()
+				}
+//Ошибка в UI5 sap.ui.commons.RadioButtonGroup, 
+//если в начальном состоянии не выбрана 
+//ни одна опция, выбор первой ( с индексом 0) опции 
+//не отображается в данных, 
+//это принудительная установка данных в таком случае
+				if (( sName == "sap.ui.commons.RadioButtonGroup" ) && param 
+					&& (typeof param.selectedIndex !== "undefined") 
+					&& param.selectedIndex == 0) 
+
+				{
+					
+					bindName = fBinder(vFieldName)
+					var  wasSel = oModel.getProperty(bindName);
+					if (typeof wasSel === "undefined")
+		        			oModel.setProperty(bindName,param.selectedIndex);
+				}
+			}
+			if (vCommandCode == -1)
+				return;			
+			
+
+//			var oModelData = oModel.getData();
+//			oModelData = getDataByPath(oModelData,fBinder());
+		     }
+	});
+
+	if (!lv_ctx)
+		return;
+
+	var sViewJson = 
+	{ 
+		"viewName": "Q.App" ,"controllerName":"Q.T",
+		"content": [ lv_ctx.obj() ] 
+	};
+
+	sap.ui.require(
+	[
+		"sap/ui/core/mvc/JSONView",
+		"sap/ui/core/mvc/Controller"
+		
+	], 
+	function() 
+	{
+		sap.ui.commons.TextArea.extend("TextAreaExt",{ 
+			metadata :
+			{
+				events:
+				{
+					"rightPress":{}
+				}
+			},
+			oncontextmenu: function(e)
+			{
+			   this.fireRightPress();
+			},
+			renderer: {}
+				
+			});
+		sap.ui.commons.TextField.extend("TextFieldExt",{ 
+			metadata :
+			{
+				events:
+				{
+					"rightPress":{}
+				}
+			},
+			oncontextmenu: function(e)
+			{
+			   this.fireRightPress();
+			},
+			renderer: {}
+				
+			});
+
+		sap.ui.commons.ValueHelpField.extend("ValueHelpFieldExt",{ 
+			metadata :
+			{
+				events:
+				{
+					"rightPress":{}
+				}
+			},
+			oncontextmenu: function(e)
+			{
+			   this.fireRightPress();
+			},
+			renderer: {}
+				
+			});
+
+		sap.ui.commons.DatePicker.extend("DatePickerExt",{ 
+			metadata :
+			{
+				events:
+				{
+					"rightPress":{}
+				}
+			},
+			oncontextmenu: function(e)
+			{
+			   this.fireRightPress();
+			},
+			renderer: {}
+				
+			});
+
+		sap.ui.commons.DropdownBox.extend("DropdownBoxExt",{ 
+			metadata :
+			{
+				events:
+				{
+					"rightPress":{}
+				}
+			},
+			oncontextmenu: function(e)
+			{
+			   this.fireRightPress();
+			},
+			renderer: {}
+				
+			});
+
+		sap.ui.commons.Label.extend("LabelExt",{ 
+			metadata :
+			{
+				events:
+				{
+					"rightPress":{}
+				}
+			},
+			oncontextmenu: function(e)
+			{
+			   this.fireRightPress();
+			},
+			renderer: {}
+				
+			});
+
+
+
+		sap.ui.commons.CheckBox.extend("CheckBoxExt",{ 
+			metadata :
+			{
+				events:
+				{
+					"rightPress":{}
+				}
+			},
+			oncontextmenu: function(e)
+			{
+			   this.fireRightPress();
+			},
+			renderer: {}
+				
+			});
+		
+
+
+		sap.ui.commons.RadioButtonGroup.extend("RadioButtonGroupExt",{ 
+			metadata :
+			{
+				events:
+				{
+					"rightPress":{}
+				}
+			},
+			oncontextmenu: function(e)
+			{
+			   this.fireRightPress();
+			},
+			renderer: {}
+				
+			});
+
+
+		sap.ui.core.mvc.Controller.extend("Q.T", lv_ctx.fs() );
+		sap.ui.core.mvc.JSONView.create({definition: sViewJson})
+		.then(function (oView) 
+		{
+		     if (gMenuObjBinder!=null)
+			gMenuObjBinder.oView = oView;
+		     window["viewId"]=oView.getId();
+		     oView.placeAt("uiArea","only");
+		},function(e){
+			alert(e);
+		}).then(function(){
+			fFillPage(lv_ctx);
+			
+			
+		});
+	});
+}
+
+</script>
+<!--$$$HTTP START-->
+<script 
+src="assign.js">
+</script>
+<script id="sap-ui-bootstrap" 
+    src="../oui5/resources/sap-ui-core.js"
+    data-sap-ui-theme="sap_belize"
+    data-sap-ui-libs="sap.m,sap.ui.commons,sap.ui.table,sap.ui.layout"
+    data-sap-ui-xx-bindingSyntax="complex"
+    data-sap-ui-compatVersion="edge"
+    data-sap-ui-onInit="fNextPage()"
+    data-sap-ui-async="true">
+</script>
+<!--$$$HTTP END-->
+</head>
+
+
+<body class = "sapUiBody" onload = "fOnCheckSap()">
+<div id="uiArea"></div>
+</body>
+</html>

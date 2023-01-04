@@ -70,7 +70,7 @@ let newMessage=function(msg,stmt)
 
     app.use(express.static(__dirname));
 
-    const data = fs.readFileSync(__dirname + "/answer.html", 'utf8');
+//    const data = fs.readFileSync(__dirname + "/answer.html", 'utf8');
 
     app.get("/api/getmsgs", (req, res) => {
 
